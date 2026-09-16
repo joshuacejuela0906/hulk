@@ -1,27 +1,37 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Teams\TeamInvitationController;
-use App\Http\Middleware\EnsureTeamMembership;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\StudentController;
-
 
 Route::get('/', function () {
     return Inertia::render('auth/login');
 })->name('home');
 
+/*
+|--------------------------------------------------------------------------
+| Student API / CRUD
+|--------------------------------------------------------------------------
+*/
+
 Route::apiResource('student', StudentController::class);
 
+/*
+|--------------------------------------------------------------------------
+| Authenticated routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
-    });
 
-    require __DIR__.'/settings.php';
-    
+    Route::get('/dashboard', DashboardController::class)
+        ->name('dashboard');
 
-    
+    Route::get('/students', function () {
+        return Inertia::render('students');
+    })->name('students');
+
+});
+
+require __DIR__.'/settings.php';
